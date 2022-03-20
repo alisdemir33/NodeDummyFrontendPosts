@@ -18,11 +18,17 @@ class Feed extends Component {
     status: '',
     postPage: 1,
     postsLoading: true,
-    editLoading: false
+    editLoading: false,
+    userId:''
   };
 
   componentDidMount() {
-    fetch('URL')
+    fetch('http://localhost:8080/auth/userstatus?userId='+this.props.userId,
+    {
+      headers:{
+        Authorization :'Bearer: '+this.props.token
+      }
+    })
       .then(res => {
         if (res.status !== 200) {
           throw new Error('Failed to fetch user status.');
@@ -30,7 +36,8 @@ class Feed extends Component {
         return res.json();
       })
       .then(resData => {
-        this.setState({ status: resData.status });
+        ;debugger
+        this.setState({ status: resData.status, userId : this.props.userId });
       })
       .catch(this.catchError);
 
@@ -81,7 +88,13 @@ class Feed extends Component {
 
   statusUpdateHandler = event => {
     event.preventDefault();
-    fetch('URL',{
+   console.log( this.state.status);
+    fetch('http://localhost:8080/auth/setuserstatus/'+this.state.userId,{
+      method:'PUT',
+      headers:{        
+        Authorization :'Bearer: '+this.props.token,
+        'Content-Type':'application/json'
+      },
       body: JSON.stringify({status: this.state.status})
     })
       .then(res => {
@@ -134,7 +147,7 @@ class Feed extends Component {
       method: method,
       body: formData,
       headers:{
-        Authorization :'Bearer: '+this.props.token
+        Authorization :'Bearer: '+this.props.token       
       }
     })
       .then(res => {
