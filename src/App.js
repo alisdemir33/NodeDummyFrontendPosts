@@ -62,9 +62,11 @@ class App extends Component {
     fetch('http://localhost:8080/auth/login',
     {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        email:authData.email,
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({
+        email: authData.email,
         password:authData.password,        
       })
     }
